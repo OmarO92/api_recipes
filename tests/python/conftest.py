@@ -51,27 +51,43 @@ def twitter_handle():
 
 
 def twitter_import_user_api_url(baseurl):
-    return "{}/import/twitter/user".format(api_base_url(baseurl))
+    # return "{}/import/twitter/user".format(api_base_url(baseurl))
+    return make_url(baseurl, '/api/import/twitter/user')
 
 
 def api_base_url(baseurl):
-    return "{}/api".format(baseurl)
+    # return "{}/api".format(baseurl)
+    return make_url(baseurl, '/api')
 
 
 def person_api_url(baseurl):
-    return "{}/person".format(api_base_url(baseurl))
+    # return "{}/person".format(api_base_url(baseurl))
+    return make_url(baseurl, '/api/person')
+
+
+def content_api_url(baseurl, content_id=None):
+    if content_id is not None:
+        return make_url(baseurl, '/api/content/{}'.format(content_id))
+    return make_url(baseurl, '/api/content')
 
 
 def person_content_api_url(baseurl, person_id):
-    return "{}/person/{}/contents".format(api_base_url(baseurl), person_id)
+    # return "{}/person/{}/contents".format(api_base_url(baseurl), person_id)
+    return make_url(baseurl, '/api/person/{}/contents'.format(person_id))
 
 
 def upload_api_url(baseurl):
-    return "{}/upload/upload_request".format(api_base_url(baseurl))
+    # return "{}/upload/upload_request".format(api_base_url(baseurl))
+    return make_url(baseurl, '/api/upload/upload_request')
+
+
+def make_url(baseurl, path):
+    return "{}{}".format(baseurl, path)
 
 
 def ping_url(baseurl):
-    return "{}/ping".format(api_base_url(baseurl))
+    # return "{}/ping".format(api_base_url(baseurl))
+    return make_url(baseurl, '/api/ping')
 
 
 def base_headers(apikey, apisecret):

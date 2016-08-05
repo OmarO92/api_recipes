@@ -11,7 +11,6 @@ import factories
 
 @pytest.mark.person_api
 def test_create_person_with_content(baseurl, apikey, apisecret):
-
     content_data = factories.get_content_data()
     person_data = factories.get_person_data(content_data)
 
@@ -25,6 +24,7 @@ def test_create_person_with_content(baseurl, apikey, apisecret):
     expect(response_json["name"]).to(equal(person_data["name"]))
     expect(response_json["contents"][0]).to(have_key("receptiviti_scores"))
     expect(response_json["contents"][0]).to(have_key("liwc_scores"))
+    expect(response_json["contents"][0]).to(have_key("interaction_guide"))
 
 
 @pytest.mark.person_api
@@ -38,6 +38,52 @@ def test_create_person_only(baseurl, apikey, apisecret):
     response_json = json.loads(response.content)
     expect(response.status_code).to(equal(200))
     expect(response_json["name"]).to(equal(person_data["name"]))
+
+
+@pytest.mark.person_api
+def test_delete_person(baseurl, apikey, apisecret):
+    person_data = factories.get_person_data()
+    person_api_url = conftest.person_api_url(baseurl)
+    auth_headers = conftest.auth_headers(apikey, apisecret)
+
+    response = post(person_api_url, json=person_data, headers=auth_headers)
+
+    response_json = json.loads(response.content)
+    resource_url = conftest.make_url(baseurl, response_json['_links']['self']['href'])
+    expect(response.status_code).to(equal(200))
+
+    response = get(resource_url, headers=auth_headers)
+    expect(response.status_code).to(equal(200))
+
+    response = delete(resource_url, headers=auth_headers)
+    expect(response.status_code).to(equal(204))
+
+    response = get(resource_url, headers=auth_headers)
+    expect(response.status_code).to(equal(404))
+
+
+@pytest.mark.person_api_test
+def test_delete_content(baseurl, apikey, apisecret):
+    content_data = factories.get_content_data()
+    person_data = factories.get_person_data(content_data)
+
+    person_api_url = conftest.person_api_url(baseurl)
+    auth_headers = conftest.auth_headers(apikey, apisecret)
+
+    response = post(person_api_url, json=person_data, headers=auth_headers)
+
+    response_json = json.loads(response.content)
+    expect(response.status_code).to(equal(200))
+    resource_url = conftest.content_api_url(baseurl, response_json['contents'][0]['_id'])
+
+    response = get(resource_url, headers=auth_headers)
+    expect(response.status_code).to(equal(200))
+
+    response = delete(resource_url, headers=auth_headers)
+    expect(response.status_code).to(equal(204))
+
+    response = get(resource_url, headers=auth_headers)
+    expect(response.status_code).to(equal(404))
 
 
 @pytest.mark.person_api

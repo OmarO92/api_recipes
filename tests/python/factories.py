@@ -23,7 +23,7 @@ def get_content_data(**kwargs):
 
 def get_person_data(content=None):
     person_data = {'name': "John {0} Doe".format(uuid.uuid4().hex), 'person_handle': uuid.uuid4().hex, 'gender': 1}
-    if content:
+    if content is not None:
         person_data["content"] = content
     return person_data
 
