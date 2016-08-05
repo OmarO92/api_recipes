@@ -20,7 +20,6 @@ Maven is a project builder normally used for most of Java projects. It is suppor
 An additional, optional, parameter is ```-DBASE_URL```. You can use it to specify which server to use when running the tests:-
 
 - *https://app.receptiviti.com* - this is the production server.
-- *https://sandbox-api.receptiviti.com* - this is the sandbox environment where you can test your code before deploying it in production.
 
 ##Python
 ###Setup
